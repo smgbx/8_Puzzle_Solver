@@ -1,11 +1,11 @@
 #include "Node.h"
 
 bool operator < (const Node& lhs, const Node& rhs) {
-	return lhs.getF() < rhs.getF();
+	return lhs.f < rhs.f;
 }
 
 bool operator > (const Node& lhs, const Node& rhs) {
-	return lhs.getF() > rhs.getF();
+	return lhs.f > rhs.f;
 }
 
 Node::Node(vector<int> newGrid, vector<int> goalGrid, int parentDepth, Node* parentAddress = NULL) {
@@ -13,20 +13,20 @@ Node::Node(vector<int> newGrid, vector<int> goalGrid, int parentDepth, Node* par
 	this->depth = parentDepth + 1;
 	this->grid = newGrid; 
 	this->heuristic = getHeuristic(goalGrid);
-	f = 0;
+	this->f = this->depth + this->heuristic;
 }
 
-int Node::getF() const {
-	int f = depth + heuristic;
-	return f;
-}
+//int Node::getF() const {
+//	int f = depth + heuristic;
+//	return f;
+//}
+//
+//void Node::setF(int f) {
+//	this->f = f;
+//	return;
+//}
 
-void Node::setF(int f) {
-	this->f = f;
-	return;
-}
-
-int Node::getHeuristic(vector<int> goal) const { //FINISHED
+int Node::getHeuristic(vector<int> goal) const { 
 	int moves = 0;
 	int distance = 0;
 

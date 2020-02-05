@@ -1,19 +1,18 @@
-#include <vector>
-#include <algorithm>
 #include <iostream>
+#include <fstream>
 #include <map>
 #include <unordered_map>
 #include <queue>
-#include <string>
+#include <cstdlib>
 #include "Node.h"
 using namespace std;
 
-bool isSolveable(int puzzleArray[]) {
+bool isSolveable(vector<int> puzzleArray) {
 	int inversions = 0;
 
 	for (int i = 0; i < 9; ++i) {
-		for (int j = 0; j <= 9; ++j) {
-			if ((puzzleArray[i] == 0 && i != 9) || puzzleArray[i] > puzzleArray[j]) {
+		for (int j = i + 1; j < 9; ++j) {
+			if ((puzzleArray[i] > puzzleArray[j]) && (puzzleArray[i] && puzzleArray[j])) { //if either digit is a 0, will not count
 				++inversions;
 			}
 		}
@@ -50,7 +49,7 @@ string getMapKey(Node node) {
 }
 
 void getChildNodes(Node &node, vector<int> goalState) {
-	int blankIndex;
+	int blankIndex = 0;
 	vector<int> tempChildGrid;
 
 	for (int i = 0; i < 9; i++) {
@@ -134,6 +133,7 @@ void Puzzle(vector<int> unsolvedPuzzle) {
 
 				if (childNode->depth < firstInstanceOfNode.depth) {
 					firstInstanceOfNode.depth = childNode->depth;
+					firstInstanceOfNode.f = childNode->f;
 					firstInstanceOfNode.parent = childNode->parent;
 				}
 			}
@@ -141,15 +141,61 @@ void Puzzle(vector<int> unsolvedPuzzle) {
 	}
 }
 
+vector<vector<int>> getUnsolvedPuzzles(string fileOfPuzzles) {
+	ifstream fin;
+	fin.open(fileOfPuzzles);
+	if (!fin) {
+		cout << "Unable to open file." << endl;
+		system("pause");
+		exit(1);
+	}
+
+	int digit;
+	string data;
+	vector<int> tempGrid;
+	vector<vector<int>> gridsToBeSolved;
+
+	while (fin>>digit) {
+		data += digit;
+	}
+
+	for (int i = 0; i < data.length(); i++) {
+		if (tempGrid.size() == 9) {
+			gridsToBeSolved.push_back(tempGrid);
+			tempGrid.clear();
+		}
+		digit = (int)data.at(i);
+		tempGrid.push_back(digit);
+	}
+
+	fin.close();
+
+	return gridsToBeSolved;
+}
+
 
 int main() {
-	vector<int> unsolvedPuzzle = { 1, 8, 2, 0, 4, 3, 7, 6, 5 };
-	vector<int> oneOff = { 1, 2, 3, 4, 5, 6, 7, 0, 8 };
-	vector<int> correct = { 1, 2, 3, 4, 5, 6, 7, 8, 0 };
-	
-	Puzzle(unsolvedPuzzle);
 
-	system("pause");
+	vector<vector<int>> unsolvedPuzzles = getUnsolvedPuzzles("program_1_data.txt");
+
+	for (vector<int> unsolvedPuzzle : unsolvedPuzzles) {
+		for (int i = 0; i < 9; i++) {
+			cout << unsolvedPuzzle[i] << " ";
+		}
+		if (isSolveable(unsolvedPuzzle)) {
+			cout << "This puzzle is solveable: ";
+			Puzzle(unsolvedPuzzle);
+		}
+		else {
+			cout << "This puzzle is not solveable. Would you like to try another one?";
+			system("pause");
+		}
+	}
+
+	//vector<int> unsolvedPuzzle = { 1, 8, 2, 0, 4, 3, 7, 6, 5 };
+	//vector<int> puz = { 8, 1, 2, 0, 4, 3, 7, 6, 5 };
+	//vector<int> oneOff = { 1, 2, 3, 4, 5, 6, 7, 0, 8 };
+	//vector<int> correct = { 1, 2, 3, 4, 5, 6, 7, 8, 0 };
 
 	return 0;
 }

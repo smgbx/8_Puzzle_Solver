@@ -121,6 +121,9 @@
   <ItemGroup>
     <ClInclude Include="Node.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\..\..\Spring %2720\CS461 AI\AIProjects\Project1\Project1\program_1_data.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
