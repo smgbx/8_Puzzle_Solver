@@ -9,10 +9,7 @@ public:
 	int depth; //our G value
 	int heuristic; //our H value
 	int f;
-	vector<Node*> childNodes; 
-
-	//int getF() const;
-	//void setF(int f);
+	vector<Node*> childNodes;
 
 	friend bool operator < (const Node& lhs, const Node& rhs);
 	friend bool operator > (const Node& lhs, const Node& rhs);

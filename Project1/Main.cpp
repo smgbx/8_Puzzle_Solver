@@ -1,3 +1,10 @@
+/*
+*Shelby Mohar
+*CS 461 Spring 2020
+*Program 1 - 8 Puzzle
+*
+*A program that takes a text file of unsolved 8 puzzles. If the puzzle is solveable, it will print each step require to solve it.
+*/
 #include <iostream>
 #include <fstream>
 #include <map>
@@ -81,7 +88,7 @@ string getMapKey(Node node) {
 	return key;
 }
 
-void getChildNodes(Node &node, vector<int> goalState) { //CHANGED &NODE to NODE for new node creation
+void getChildNodes(Node &node, vector<int> goalState) { 
 	int blankIndex = 0;
 	vector<int> tempChildGrid;
 
@@ -121,104 +128,52 @@ void getChildNodes(Node &node, vector<int> goalState) { //CHANGED &NODE to NODE 
 	}
 }
 
-void printGrid(vector<int> grid) {
+void printGrid(vector<int> grid, ofstream &fout) {
 	for (int i = 0; i < 9; i++) {
+		fout << grid[i];
 		cout << grid[i];
 
 		if ((i + 1) % 3 == 0) {
+			fout << endl;
 			cout << endl;
 		}
 		else {
+			fout << " ";
 			cout << " ";
 		}
 	}
 }
 
-//void printPathFromStart(const Node &startNode, const vector<int> goalState) {
-//	Node currentNode = startNode;
-//	printGrid(currentNode.grid);
-//	cout << currentNode.childNodes.size();
-//
-//	while (currentNode.grid != goalState) {
-//
-//		for (Node* child : currentNode.childNodes) {
-//			//if (child->f < currentNode.f) {
-//			//	currentNode.grid = child->grid;
-//			//}
-//			vector<int> kid = child->grid;
-//			printGrid(kid);
-//		}
-//		system("pause");
-//	}
-//
-//}
-////
-////void retraceStepsRecursively(Node currentNodePtr, Node startNode, int count) {
-////	if (currentNodePtr.grid == startNode.grid) {
-////		return;
-////	}
-////
-////	for (int i = 0; i < 9; i++) {
-////		cout << currentNodePtr.parent->grid[i];
-////	}
-////	cout << endl;
-////	cout << "Count: " << count << endl;
-////	system("pause");
-////
-////	retraceStepsRecursively(*currentNodePtr.parent, startNode, ++count);
-////	printGrid(currentNodePtr.grid);
-////}
+void writeResults() {
 
-void retraceSteps(Node currentNode, vector<int> startGrid) {
-	//Node tempNode = *currentNode->parent; 
-	//stack<vector<int>> steps;
-	//string key = getMapKey(currentNode);
-	//currentNode = &closedList.find(key)->second; 
-	//cout << "IN RETRACE: " << endl;
 
-	//if (currentNode.grid == currentNode.parent->grid) {
-	//	cout << "Child and parent match." << endl;
-	//}
-	//else {
-	//	cout << "Parent and child are different." << endl;
-	//}
+}
+
+void retraceSteps(Node currentNode, vector<int> startGrid, ofstream &fout) {
+
 	stack<vector<int>> steps;
+	fout << "Moves to solve puzzle ";
+	cout << "Moves to solve puzzle ";
 
 	while (currentNode.grid != startGrid) {
 		steps.push(currentNode.grid);
 		currentNode = *currentNode.parent;
 	}
 	steps.push(currentNode.grid);
+	fout << "(" << steps.size() << ") :" << endl;
+	cout << "(" << steps.size() << ") :" << endl;
 
 	while (!steps.empty()) {
-		printGrid(steps.top());
+		printGrid(steps.top(), fout);
+		fout << endl;
 		cout << endl;
 		steps.pop();
 	}
 
-
-	//while (tempNode.grid != startNode.grid) {
-	//	steps.push(tempNode.grid);
-	//	cout << "Pushed to stack." << endl;
-
-	//	for (int i = 0; i < 9; i++) {
-	//		cout << tempNode.grid[i] << " ";
-	//	}
-	//	system("pause");
-	//	tempNode = &(tempNode->parent);
-	//}
-	//steps.push(startNode.grid); 
-
-	//cout << "Final startNode pushed to stack." << endl;
-	//while (!steps.empty()) {
-	//	printGrid(steps.top());
-	//	steps.pop();
-	//}
-
 	return;
 }
 
-void Puzzle(vector<int> unsolvedPuzzle) {
+void Puzzle(vector<int> unsolvedPuzzle, ofstream &fout) {
 	unordered_map<string, Node*> closedList;
 	unordered_map<string, Node*> openListMap; //O(1) checker
 	priority_queue<Node*, vector<Node*>, greater<Node*>> openListQueue; //organized by lowest F
@@ -231,65 +186,15 @@ void Puzzle(vector<int> unsolvedPuzzle) {
 
 	int steps = 0;
 	while (!openListQueue.empty()) {
-		//cout << "Steps: " << ++steps << endl;
 
 		Node *currentNode = openListQueue.top(); //get unexpanded node with lowest f
-
-		//openListQueue.pop(); //remove from unchecked list
-		//openListMap.erase(getMapKey(currentNode)); //erases node from map
-
-
-		if (currentNode->parent != NULL) {
-			//cout << "Checking after getting top from queue: ";
-			//if (currentNode->grid == currentNode->parent->grid) {
-			//	cout << "Parent and child SAME." << endl;
-			//}
-			//else {
-			//	cout << "Parent and child DIFFERENT." << endl;
-			//}
-		}
-
-		//cout << "Checking children BEFORE LOOPS: " << endl;
-		//for (Node* child : currentNode->childNodes) {
-		//	printGrid(child->grid);
-		//	cout << endl;
-		//}
-
 		openListQueue.pop(); //remove from unchecked list
 		openListMap.erase(getMapKey(*currentNode)); //erases node from map
-		//cout << "Printing from queue: " << endl;
-		//cout << "CurrentState: " << endl;
-		//printGrid(currentNode.grid);
-		//if (currentNode.parent != NULL) {
-		//	cout << "CurrentState parent: " << endl;
-		//	printGrid(currentNode.parent->grid);
-		//}
 
 		string key = getMapKey(*currentNode);
 
-		//cout << "Printing from Map: " << endl;
-		//cout << "CurrentState: " << endl;
-		//printGrid(currentNode.grid);
-		//cout << "CurrentState parent: " << endl;
-		//if (currentNode.parent != NULL) {
-		//	printGrid(currentNode.parent->grid);
-		//}
-
 		if (currentNode->grid == goalState) {
-			cout << "Puzzle has been solved!" << endl;
-			//closedList.insert({ getMapKey(*currentNode), currentNode });
-			//printPathFromStart(startState, goalState);
-			//retraceStepsRecursively(currentNode, startState, 0);
-
-			//startState and currentState (goalState) are correct - why do they have the same parent?
-			//cout << "StartState: " << endl;
-			//printGrid(startState.grid);
-			//cout << "CurrentState: " << endl;
-			//printGrid(currentNode.grid);
-			//cout << "CurrentState parent: " << endl;
-			//printGrid(currentNode.parent->grid); 
-
-			retraceSteps(*currentNode, startState.grid); //go up tree through parents from goal state to start state
+			retraceSteps(*currentNode, startState.grid, fout); //go up tree through parents from goal state to start state
 			return;
 		}
 
@@ -297,20 +202,7 @@ void Puzzle(vector<int> unsolvedPuzzle) {
 		getChildNodes(*currentNode, goalState);
 
 		for (Node *childNode : currentNode->childNodes) {
-			//TEST - to see if children can correctly access parent node
-			//cout << "CH: ";
-			//for (int i = 0; i < 9; i++) {
-			//	cout << childNode->grid[i] << " ";
-			//}
-			//cout << endl;
-			//cout << "PA: ";
-			//for (int i = 0; i < 9; i++) {
-			//	cout << childNode->parent->grid[i] << " ";
-			//}
-			//cout << endl;
-			//system("pause");
-			//END TEST - PASS
-
+			
 			string childMapKey = getMapKey(*childNode);
 
 			if (closedList.find(childMapKey) != closedList.end()) { //if child in closedList
@@ -322,85 +214,16 @@ void Puzzle(vector<int> unsolvedPuzzle) {
 				openListMap.insert({ childMapKey, childNode });
 				openListQueue.push(childNode);
 
-				//Child and parent grids are different here!!
-				//cout << "Child has been addd to open list. Checking child after added to list: " << endl;
-				Node *test = openListMap.find(childMapKey)->second;
-				//cout << "Child grid from MAP: " << endl;
-				//printGrid(test.grid);
-				//cout << "Parent grid from MAP: " << endl;
-				//printGrid(test.parent->grid);
-
-
-				//if (currentNode.parent != NULL) {
-				//	cout << "Checking after adding new child to map: ";
-				//	if (test.grid == test.parent->grid) {
-				//		cout << "Parent and child SAME." << endl;
-				//	}
-				//	else {
-				//		cout << "Parent and child DIFFERENT." << endl;
-				//	}
-				//}
-
-				Node* testNode = openListQueue.top();
-
-				//if (currentNode->parent != NULL) {
-				//	cout << "Checking top after adding new child to queue: ";
-				//	if (testNode->grid == testNode->parent->grid) {
-				//		cout << "Parent and child SAME." << endl;
-				//	}
-				//	else {
-				//		cout << "Parent and child DIFFERENT." << endl;
-				//	}
-				//}
-
 			}
 			else { //node has been seen previously
-				//cout << "Node has been seen previously." << endl;
-
-				//unordered_map<string, Node>::iterator iter = openListMap.find(childMapKey);
 
 				Node* firstInstanceOfNode = openListMap.find(childMapKey)->second;
-				//use an iterator here instead? Memory error?
 
 				if (childNode->depth < firstInstanceOfNode->depth) {
-
-					//TEST - are children and parent node different?
-					//cout << "Firstinstance parent before: ";
-					//for (int i = 0; i < 9; i++) {
-					//	cout << firstInstanceOfNode->parent->grid[i] << " ";
-					//}
-					//cout << "Child parent before: ";
-					//for (int i = 0; i < 9; i++) {
-					//	cout << childNode->parent->grid[i] << " ";
-					//}
-					//cout << endl;
-					//cout << "BEFORE: First d: " << firstInstanceOfNode->depth << " First f: " << firstInstanceOfNode->f << endl;
-					//cout << "Child d: " << childNode->depth << " Child f: " << childNode->f << endl;
-					//cout << "change in depth" << endl;
-					//END
 
 					firstInstanceOfNode->depth = childNode->depth;
 					firstInstanceOfNode->f = childNode->f;
 					firstInstanceOfNode->parent = childNode->parent;
-
-					//openListQueue.push(firstInstanceOfNode); //note that push inserts and resorts PQ
-
-					//TEST
-					//cout << "Firstinstance parent after: ";
-					//for (int i = 0; i < 9; i++) {
-					//	cout << firstInstanceOfNode->parent->grid[i] << " ";
-					//}
-					//cout << "Child parent after: ";
-					//for (int i = 0; i < 9; i++) {
-					//	cout << childNode->parent->grid[i] << " ";
-					//}
-					//cout << endl;
-					//cout << "AFTER: First d: " << firstInstanceOfNode->depth << " First f: " << firstInstanceOfNode->f << endl;
-					//cout << "Child d: " << childNode->depth << " Child f: " << childNode->f << endl;
-
-					//system("pause");
-					//END
-
 				}
 
 			}
@@ -408,29 +231,48 @@ void Puzzle(vector<int> unsolvedPuzzle) {
 	}
 }
 
-int main() {
+void EightPuzzleSolver(string filename) {
+	vector<vector<int>> unsolvedPuzzles = getUnsolvedPuzzles(filename);
 
-	vector<vector<int>> unsolvedPuzzles = getUnsolvedPuzzles("program_1_data.txt");
+	ofstream fout;
+	fout.open("puzzle_results.txt");
 
-	for (vector<int> unsolvedPuzzle : unsolvedPuzzles) {
-		for (int i = 0; i < 9; i++) {
-			cout << unsolvedPuzzle[i] << " ";
-			
-		}
-		if (isSolveable(unsolvedPuzzle)) {
-			cout << "This puzzle is solveable: " << endl;
-			Puzzle(unsolvedPuzzle);
-		}
-		else {
-			cout << "This puzzle is not solveable. Would you like to try another one?" << endl;
-			system("pause");
-		}
+	if (!fout) {
+		cout << "Unable to open output file." << endl;
+		exit(1);
 	}
 
-	//vector<int> unsolvedPuzzle = { 1, 8, 2, 0, 4, 3, 7, 6, 5 };
-	//vector<int> puz = { 8, 1, 2, 0, 4, 3, 7, 6, 5 };
-	//vector<int> oneOff = { 1, 2, 3, 4, 5, 6, 7, 0, 8 };
-	//vector<int> correct = { 1, 2, 3, 4, 5, 6, 7, 8, 0 };
+	for (vector<int> unsolvedPuzzle : unsolvedPuzzles) {
+
+		printGrid(unsolvedPuzzle, fout);
+
+		fout << endl;
+		cout << endl;
+
+		if (isSolveable(unsolvedPuzzle)) {
+			fout << "This puzzle is solveable.Please hold..." << endl;
+			cout << "This puzzle is solveable. Please hold..." << endl;
+			Puzzle(unsolvedPuzzle, fout);
+		}
+		else {
+			fout << "This puzzle is not solveable." << endl;
+			cout << "This puzzle is not solveable." << endl;
+		}
+
+		system("pause");
+		fout << endl;
+		cout << endl;
+	}
+
+	fout.close();
+
+	return;
+}
+
+int main() {
+
+	//Enter file name of puzzles to solve
+	EightPuzzleSolver("program_1_data.txt");
 
 	return 0;
 }

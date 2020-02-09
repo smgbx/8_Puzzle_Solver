@@ -16,24 +16,6 @@ Node::Node(vector<int> newGrid, vector<int> goalGrid, int parentDepth, Node *par
 	this->f = this->depth + this->heuristic;
 }
 
-//Node::Node(vector<int> newGrid, vector<int> goalGrid, int parentDepth, Node* parentAddress) {
-//	this->parent = parentAddress;
-//	this->depth = parentDepth + 1;
-//	this->grid = newGrid; 
-//	this->heuristic = getHeuristic(goalGrid);
-//	this->f = this->depth + this->heuristic;
-//}
-
-//int Node::getF() const {
-//	int f = depth + heuristic;
-//	return f;
-//}
-//
-//void Node::setF(int f) {
-//	this->f = f;
-//	return;
-//}
-
 int Node::getHeuristic(vector<int> goal) const { 
 	int moves = 0;
 	int distance = 0;
