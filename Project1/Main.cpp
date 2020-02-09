@@ -242,7 +242,12 @@ void EightPuzzleSolver(string filename) {
 		exit(1);
 	}
 
+	int puzzle = 0;
+
 	for (vector<int> unsolvedPuzzle : unsolvedPuzzles) {
+
+		fout << "Unsolved puzzle " << ++puzzle << "/" << unsolvedPuzzle.size() << " :" << endl;
+		cout << "Unsolved puzzle " << puzzle << "/" << unsolvedPuzzle.size() << " :" << endl;
 
 		printGrid(unsolvedPuzzle, fout);
 
@@ -250,7 +255,7 @@ void EightPuzzleSolver(string filename) {
 		cout << endl;
 
 		if (isSolveable(unsolvedPuzzle)) {
-			fout << "This puzzle is solveable.Please hold..." << endl;
+			fout << "This puzzle is solveable. Please hold..." << endl;
 			cout << "This puzzle is solveable. Please hold..." << endl;
 			Puzzle(unsolvedPuzzle, fout);
 		}
