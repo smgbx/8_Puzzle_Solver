@@ -47,14 +47,15 @@ vector<vector<int>> getUnsolvedPuzzles(string fileOfPuzzles) {
 		data += digit;
 	}
 
-	for (int i = 0; i < data.length(); i++) {
+	for (char number : data) {
 		if (tempGrid.size() == 9) {
 			gridsToBeSolved.push_back(tempGrid);
 			tempGrid.clear();
 		}
-		digit = (int)data.at(i);
-		tempGrid.push_back(digit);
+		tempGrid.push_back((int)number);
 	}
+
+	gridsToBeSolved.push_back(tempGrid);
 
 	fin.close();
 
@@ -142,11 +143,6 @@ void printGrid(vector<int> grid, ofstream &fout) {
 			cout << " ";
 		}
 	}
-}
-
-void writeResults() {
-
-
 }
 
 void retraceSteps(Node currentNode, vector<int> startGrid, ofstream &fout) {
@@ -246,8 +242,8 @@ void EightPuzzleSolver(string filename) {
 
 	for (vector<int> unsolvedPuzzle : unsolvedPuzzles) {
 
-		fout << "Unsolved puzzle " << ++puzzle << "/" << unsolvedPuzzle.size() << " :" << endl;
-		cout << "Unsolved puzzle " << puzzle << "/" << unsolvedPuzzle.size() << " :" << endl;
+		fout << "Unsolved puzzle " << ++puzzle << "/" << unsolvedPuzzles.size() << " :" << endl;
+		cout << "Unsolved puzzle " << puzzle << "/" << unsolvedPuzzles.size() << " :" << endl;
 
 		printGrid(unsolvedPuzzle, fout);
 
