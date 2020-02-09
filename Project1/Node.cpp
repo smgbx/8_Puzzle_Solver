@@ -8,13 +8,21 @@ bool operator > (const Node& lhs, const Node& rhs) {
 	return lhs.f > rhs.f;
 }
 
-Node::Node(vector<int> newGrid, vector<int> goalGrid, int parentDepth, Node* parentAddress = NULL) {
-	this->parent = parentAddress;
+Node::Node(vector<int> newGrid, vector<int> goalGrid, int parentDepth, Node *parent) {
+	this->parent = parent;
 	this->depth = parentDepth + 1;
-	this->grid = newGrid; 
+	this->grid = newGrid;
 	this->heuristic = getHeuristic(goalGrid);
 	this->f = this->depth + this->heuristic;
 }
+
+//Node::Node(vector<int> newGrid, vector<int> goalGrid, int parentDepth, Node* parentAddress) {
+//	this->parent = parentAddress;
+//	this->depth = parentDepth + 1;
+//	this->grid = newGrid; 
+//	this->heuristic = getHeuristic(goalGrid);
+//	this->f = this->depth + this->heuristic;
+//}
 
 //int Node::getF() const {
 //	int f = depth + heuristic;

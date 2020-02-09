@@ -17,7 +17,7 @@ public:
 	friend bool operator < (const Node& lhs, const Node& rhs);
 	friend bool operator > (const Node& lhs, const Node& rhs);
 
-	Node(vector<int> newGrid, vector<int> goalGrid, int parentDepth, Node* parentAddress);
+	Node(vector<int> newGrid, vector<int> goalGrid, int parentDepth, Node *parent);
 
 private:
 	int getHeuristic(vector<int> goalGrid) const;
